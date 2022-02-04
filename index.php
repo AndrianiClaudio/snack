@@ -22,11 +22,12 @@ $products = [
 ];
 // var_dump($_GET['prezzo']);
 // var_dump($_GET['tipologia']);
-$filterdProducts = $products;
+$filteredProducts = $products;
 [
   $prezzo,
   $tipologia
-] = 'all';
+  ] = 'all';
+  // se non settato valore, imposta a true
 //filtra sia per prezzo che per tipologia
 if (isset($_GET['prezzo']) === true) {
   $prezzo = $_GET['prezzo'];
@@ -34,12 +35,28 @@ if (isset($_GET['prezzo']) === true) {
 if (isset($_GET['tipologia']) === true) {
   $tipologia = $_GET['tipologia'];
 }
+// var_dump($prezzo, $tipologia);
 
-var_dump($prezzo, $tipologia);
-foreach ($products as $p) {
-  echo $p['Prezzo'];
-  echo $p['Tipologia'];
+//controllo se bisogna filtrare per filtro/tipologia
+if($prezzo !== 'all' || $tipologia !== 'all') {
+  // reset carte filtrate
+  $filteredProducts = [];
+  //cicla e filtra
+  foreach ($products as $key => $p) {
+    // var_dump($p);
+    if($p['Prezzo'] < $prezzo) {
+      $filteredProducts[] = $p;
+      // echo '---coondizione prezzo < prezzo selezionato per filtraggio';
+    }
+  }
 }
+    // if($prezzo === 'all' && $tipologia === 'all') {
+    //   echo "filtra sia per prezzo che per tipologia: ",$prezzo, $tipologia,'<br>';
+    // } elseif ($prezzo === 'all') {
+    //   echo "filtra solo per prezzo: ",$prezzo,'<br>';
+    // } elseif ($tipologia == 'all'){
+    //   echo "filtra solo per tipologia: ",$tipologia,'<br>';
+    // }
 ?>
 
 
@@ -76,7 +93,7 @@ foreach ($products as $p) {
       </form>
       <?php
       echo '<ul>';
-      foreach ($filterdProducts as $product) {
+      foreach ($filteredProducts as $product) {
         echo '<li>';
         echo '<h2>' . $product['Nome'] . '</h2>';
         echo '<b>' . $product['Prezzo'] . '</b><br>';
